@@ -1,0 +1,7 @@
+1. Combine data (BPM merge to DOF)
+2. Time series ()
+3. Decision table feature selection (BPM > compass > acceleration)
+4. Handle outliers (max/min cap, zero value)
+5. Normalization
+6. ROC, RUC
+7. RNN, LSTM
