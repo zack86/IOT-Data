@@ -1,0 +1,46 @@
+from kafka import KafkaConsumer
+import os
+import time
+import datetime
+import csv
+import json
+import sys
+
+music_on = False
+
+while True:
+	consumer = KafkaConsumer(bootstrap_servers=['52.199.170.216:9092'])
+	consumer.subscribe(['result'])
+
+	list = [0] * 20
+	thresh_start = 5
+	thresh_end = 3
+	for message in consumer:
+		record = message.value
+		result = json.loads(record)
+		output = result['output']
+		list.append(output)
+		list.pop(0)
+		count = list.count(1)
+	
+		if output == 0:
+			print('untired')
+		else:
+			print('tired')
+		
+		print(list)
+
+		if count < thresh_start:
+			if music_on is True and count < thresh_end:
+				print('stopping music...')
+				music_on = False
+				os.system('killall mplayer')
+				sys.exit()
+		else:	
+			if music_on is False: 
+				os.system('mplayer /home/pi/test/Run-Music/21_guns.mp3 &')
+				#os.system('bash -c "exec -a my-music /home/pi/test/Run-Music/music_script.sh &"')
+				music_on = True
+
+		
+consumer.close()
